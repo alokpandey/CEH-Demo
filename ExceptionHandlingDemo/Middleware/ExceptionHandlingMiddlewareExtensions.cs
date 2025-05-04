@@ -2,12 +2,11 @@
  * File: ExceptionHandlingMiddlewareExtensions.cs
  * Project: Exception Handling Demo
  * Created: May 2024
+ * Author: Alok Pandey
  *
  * Description:
  * Extension methods for registering the exception handling middleware
  * in the ASP.NET Core application pipeline.
- *
- * Copyright (c) 2024. All rights reserved.
  */
 
 using Microsoft.AspNetCore.Builder;

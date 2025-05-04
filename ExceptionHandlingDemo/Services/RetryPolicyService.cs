@@ -2,13 +2,12 @@
  * File: RetryPolicyService.cs
  * Project: Exception Handling Demo
  * Created: May 2024
+ * Author: Alok Pandey
  *
  * Description:
  * Service for implementing retry policies with exponential backoff and circuit breaker patterns.
  * Provides methods to execute operations with automatic retries for transient failures
  * and circuit breaking to prevent cascading failures after multiple consecutive errors.
- *
- * Copyright (c) 2024. All rights reserved.
  */
 
 using System;

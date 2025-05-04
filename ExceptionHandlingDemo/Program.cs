@@ -2,13 +2,12 @@
  * File: Program.cs
  * Project: Exception Handling Demo
  * Created: May 2024
+ * Author: Alok Pandey
  *
  * Description:
  * Main entry point for the ASP.NET Core application.
  * Configures services, middleware, and request pipeline.
  * Registers exception handling middleware and related services.
- *
- * Copyright (c) 2024. All rights reserved.
  */
 
 using ExceptionHandlingDemo.Middleware;

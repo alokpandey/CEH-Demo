@@ -2,13 +2,12 @@
  * File: MetricsService.cs
  * Project: Exception Handling Demo
  * Created: May 2024
+ * Author: Alok Pandey
  *
  * Description:
  * Service for tracking application metrics including error rates and types.
  * Provides methods to record errors, calculate error rates, and generate
  * error metrics summaries. Includes automatic cleanup of old error data.
- *
- * Copyright (c) 2024. All rights reserved.
  */
 
 using System;

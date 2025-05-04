@@ -2,13 +2,12 @@
  * File: ErrorResponse.cs
  * Project: Exception Handling Demo
  * Created: May 2024
+ * Author: Alok Pandey
  *
  * Description:
  * Defines the standardized error response format for the application.
  * Includes error codes, categories, correlation IDs, documentation links,
  * and suggestions for resolving errors.
- *
- * Copyright (c) 2024. All rights reserved.
  */
 
 using System;

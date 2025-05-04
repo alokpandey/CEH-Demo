@@ -2,14 +2,13 @@
  * File: ExceptionHandlingMiddleware.cs
  * Project: Exception Handling Demo
  * Created: May 2024
+ * Author: Alok Pandey
  *
  * Description:
  * Centralized middleware for handling exceptions in ASP.NET Core applications.
  * Implements retry policies with exponential backoff and circuit breaker patterns
  * for system-level exceptions. Provides structured logging, metrics tracking,
  * and standardized error responses with correlation IDs.
- *
- * Copyright (c) 2024. All rights reserved.
  */
 
 using System;
