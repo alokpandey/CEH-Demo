@@ -43,9 +43,20 @@ public class ExceptionHandlingMiddlewareTests
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(errorResponse);
+
+        // Verify all the required fields are present
+        Assert.NotNull(errorResponse.CorrelationId);
+        Assert.NotEmpty(errorResponse.CorrelationId);
         Assert.Equal(1001, errorResponse.ErrorCode);
         Assert.Equal("Configuration Error", errorResponse.ErrorCategory);
+        Assert.Equal((int)HttpStatusCode.BadRequest, errorResponse.HttpStatusCode);
         Assert.Equal("Configuration file is missing or invalid", errorResponse.Message);
+        Assert.NotNull(errorResponse.DetailedMessage);
+        Assert.NotEmpty(errorResponse.DetailedMessage);
+        Assert.NotNull(errorResponse.RequestContext);
+        Assert.NotNull(errorResponse.RequestContext.Path);
+        Assert.NotEmpty(errorResponse.RequestContext.Path);
+        Assert.NotEqual(default, errorResponse.Timestamp);
     }
 
     [Fact]

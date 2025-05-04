@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
-// Register the retry policy service
+// Register services
 builder.Services.AddSingleton<RetryPolicyService>();
+builder.Services.AddSingleton<MetricsService>();
 
 var app = builder.Build();
 
