@@ -1,3 +1,16 @@
+/*
+ * File: RequestContext.cs
+ * Project: Exception Handling Demo
+ * Created: May 2024
+ *
+ * Description:
+ * Captures detailed information about HTTP requests for debugging and logging purposes.
+ * Includes HTTP method, path, query string, client IP, user agent, and headers.
+ * Provides correlation ID tracking across systems.
+ *
+ * Copyright (c) 2024. All rights reserved.
+ */
+
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;

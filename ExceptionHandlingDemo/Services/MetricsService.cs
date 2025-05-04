@@ -1,3 +1,16 @@
+/*
+ * File: MetricsService.cs
+ * Project: Exception Handling Demo
+ * Created: May 2024
+ *
+ * Description:
+ * Service for tracking application metrics including error rates and types.
+ * Provides methods to record errors, calculate error rates, and generate
+ * error metrics summaries. Includes automatic cleanup of old error data.
+ *
+ * Copyright (c) 2024. All rights reserved.
+ */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -21,7 +34,7 @@ namespace ExceptionHandlingDemo.Services
         public MetricsService(ILogger<MetricsService> logger)
         {
             _logger = logger;
-            
+
             // Create a timer to clean up old error timestamps
             _cleanupTimer = new Timer(CleanupOldErrors, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
         }
@@ -36,18 +49,18 @@ namespace ExceptionHandlingDemo.Services
         {
             // Increment total error count
             _errorCounters.AddOrUpdate("total", 1, (_, count) => count + 1);
-            
+
             // Increment category error count
             string categoryKey = $"category:{errorCategory}";
             _errorCounters.AddOrUpdate(categoryKey, 1, (_, count) => count + 1);
-            
+
             // Increment specific error code count
             string codeKey = $"code:{errorCode}";
             _errorCounters.AddOrUpdate(codeKey, 1, (_, count) => count + 1);
-            
+
             // Add timestamp for error rate calculations
             var now = DateTime.UtcNow;
-            
+
             // Add to total error rate queue
             if (!_errorTimestamps.TryGetValue("total", out var totalQueue))
             {
@@ -55,7 +68,7 @@ namespace ExceptionHandlingDemo.Services
                 _errorTimestamps.TryAdd("total", totalQueue);
             }
             totalQueue.Enqueue(now);
-            
+
             // Add to category error rate queue
             if (!_errorTimestamps.TryGetValue(categoryKey, out var categoryQueue))
             {
@@ -63,7 +76,7 @@ namespace ExceptionHandlingDemo.Services
                 _errorTimestamps.TryAdd(categoryKey, categoryQueue);
             }
             categoryQueue.Enqueue(now);
-            
+
             // Add to code error rate queue
             if (!_errorTimestamps.TryGetValue(codeKey, out var codeQueue))
             {
@@ -71,7 +84,7 @@ namespace ExceptionHandlingDemo.Services
                 _errorTimestamps.TryAdd(codeKey, codeQueue);
             }
             codeQueue.Enqueue(now);
-            
+
             // Log the error for metrics purposes
             _logger.LogInformation(
                 "Error metrics: Category={Category}, Code={Code}, CorrelationId={CorrelationId}",
@@ -142,7 +155,7 @@ namespace ExceptionHandlingDemo.Services
                 ["categoryBreakdown"] = GetCategoryBreakdown(),
                 ["topErrorCodes"] = GetTopErrorCodes(5)
             };
-            
+
             return summary;
         }
 
@@ -152,13 +165,13 @@ namespace ExceptionHandlingDemo.Services
         private Dictionary<string, long> GetCategoryBreakdown()
         {
             var breakdown = new Dictionary<string, long>();
-            
+
             foreach (var key in _errorCounters.Keys.Where(k => k.StartsWith("category:")))
             {
                 string category = key.Substring("category:".Length);
                 breakdown[category] = _errorCounters[key];
             }
-            
+
             return breakdown;
         }
 
@@ -168,7 +181,7 @@ namespace ExceptionHandlingDemo.Services
         private List<KeyValuePair<int, long>> GetTopErrorCodes(int count)
         {
             var errorCodes = new List<KeyValuePair<int, long>>();
-            
+
             foreach (var key in _errorCounters.Keys.Where(k => k.StartsWith("code:")))
             {
                 if (int.TryParse(key.Substring("code:".Length), out var code))
@@ -176,7 +189,7 @@ namespace ExceptionHandlingDemo.Services
                     errorCodes.Add(new KeyValuePair<int, long>(code, _errorCounters[key]));
                 }
             }
-            
+
             return errorCodes.OrderByDescending(kv => kv.Value).Take(count).ToList();
         }
 
@@ -189,10 +202,10 @@ namespace ExceptionHandlingDemo.Services
             {
                 return 0;
             }
-            
+
             var cutoff = DateTime.UtcNow.Subtract(_errorRateWindow);
             var recentErrors = queue.Where(ts => ts >= cutoff).Count();
-            
+
             // Calculate errors per minute
             return recentErrors / _errorRateWindow.TotalMinutes;
         }
@@ -205,14 +218,14 @@ namespace ExceptionHandlingDemo.Services
             try
             {
                 var cutoff = DateTime.UtcNow.Subtract(_errorRateWindow);
-                
+
                 foreach (var key in _errorTimestamps.Keys)
                 {
                     if (_errorTimestamps.TryGetValue(key, out var queue))
                     {
                         // Create a new queue with only recent errors
                         var newQueue = new ConcurrentQueue<DateTime>(queue.Where(ts => ts >= cutoff));
-                        
+
                         // Replace the old queue with the new one
                         _errorTimestamps[key] = newQueue;
                     }
